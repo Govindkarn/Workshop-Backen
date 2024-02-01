@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  todo-api:
+    container_name: Todo.Api
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    depends_on:
+      - todo-db
+
+  todo-db:
+    image: postgres:latest
+    container_name: Todo.Db
+    environment:
+      - POSTGRES_DB=todo
+      - POSTGRES_USER=todo_user
+      - POSTGRES_PASSWORD=9d9dfbfbfdfd@S
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
