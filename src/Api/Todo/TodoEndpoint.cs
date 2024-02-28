@@ -1,6 +1,5 @@
 using Data.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity.Data;
 
 namespace Api.Todo;
 public static class TodoEndpoint
@@ -12,6 +11,7 @@ public static class TodoEndpoint
         routeBuilder.MapGet("/api/todo/{id}", GetTodoByIdAsync);
         routeBuilder.MapGet("/api/todo/get", GetAllTodoAsync);
         routeBuilder.MapPost("/api/todo/create", CreateTodoAsync);
+        routeBuilder.MapDelete("/api/todo/delete/{id}", DeleteTodoAsync);
         return routeBuilder;
     }
 
@@ -63,5 +63,15 @@ public static class TodoEndpoint
         }
 
         return TypedResults.BadRequest();
+    }
+
+    public static async Task<Results<Ok,BadRequest>> DeleteTodoAsync(
+        Guid id,
+        ITodoRepository todoRepository,
+        CancellationToken cancellationToken)
+    {
+        todoRepository.Delete(id);
+        await Task.CompletedTask;
+        return TypedResults.Ok();
     }
 }
